@@ -1,0 +1,46 @@
+version: "3"
+services:
+    sponsor-service:
+        build: ./
+        volumes:
+            - ./src:/app/src
+        container_name: sponsor-service
+        restart: always
+        environment:
+            - PORT=8083
+            - DATABASE_URL=postgres://postgres:postgres@psql-sponsors:5432/postgres
+            - ENV=development
+        networks:
+            - default
+            - sponsors-net
+        ports:
+            - 8083:8083
+        depends_on:
+            psql-sponsors:
+                condition: service_healthy
+        command: npm run dev
+        
+    psql-sponsors:
+        image: postgres
+        container_name: psql-sponsors
+        environment:
+            - POSTGRES_PASSWORD=postgres
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - ./sql/initialize_database.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+            - 5428:5432
+        networks:
+            - sponsors-net
+            
+networks:
+    default:
+        external: true
+        name: my-net
+    sponsors-net:
+        driver: bridge
+        name: sponsors-net
