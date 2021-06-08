@@ -12,7 +12,7 @@ function msErrorHandler(err, res) {
 
   if (response) {
     console.log(response.data, response.status);
-    return errorResponse(res, response.status, response.data.message)
+    return errorResponse(res, response.status, response.data.error)
   } else if (request) {
     console.log(request);
     return errorResponse(res, response.status, 'internal-service-req-error')
