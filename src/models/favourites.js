@@ -16,7 +16,11 @@ async function getFavourites(params) {
   const searchParams = { 
     'limit': params.limit || 10,
     'offset': (params.page - 1) * params.limit || 0,
-    'raw': true
+    'raw': true,
+    'order': [
+      ['projectid', 'asc'],
+      ['userid', 'asc']
+    ]
   }   
   if (params.userid){
     searchParams.where = { userid: params.userid }
@@ -44,9 +48,9 @@ function validateNew(fav){
 function validateSearch(params){
   const JoiSchema = Joi.object({
     userid: Joi.string().max(255),
-    projectid: Joi.number().integer(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer()
+    projectid: Joi.number().integer().positive(),
+    limit: Joi.number().integer().positive(),
+    page: Joi.number().integer().positive()
   }).options({ abortEarly: false });
   
   return JoiSchema.validate(params);

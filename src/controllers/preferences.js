@@ -1,6 +1,5 @@
 const { ApiError } = require("../errors/ApiError");
 const Preferences = require("../models/preferences")
-const Proxy = require("../proxy/proxy")
 
 async function create(req, res) {
   const { error } = Preferences.validatePreferences(req.body)
@@ -10,8 +9,6 @@ async function create(req, res) {
   if (alreadyInDatabse){
     throw ApiError.badRequest("Preferences has already been set for this user")
   }
-
-  await Proxy.validateUserExistance(req.body.userid)
   
   const result = await Preferences.addPreferences(req.body)
   return res.status(200).json({
