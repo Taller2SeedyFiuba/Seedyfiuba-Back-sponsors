@@ -1,6 +1,5 @@
 const { ApiError } = require("../errors/ApiError");
 const Favourites = require("../models/favourites")
-const Proxy = require("../proxy/proxy")
 
 async function search(req, res) {
   //Construimos el espacio de busqueda de la BD
@@ -26,9 +25,7 @@ async function create(req, res) {
   if (alreadyInDatabse){
     throw ApiError.badRequest("The user already has this project as favourite")
   }
-  await Proxy.validateUserExistance(req.body.userid)
-  await Proxy.validateProjectExistance(req.body.projectid)
-
+  
   const fav = await Favourites.addFavourite(req.body)
   return res.status(200).json({
     status: "success",

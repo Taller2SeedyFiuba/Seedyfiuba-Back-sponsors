@@ -6,15 +6,13 @@ services:
             - ./src:/app/src
         container_name: sponsor-service
         restart: always
-        environment:
-            - PORT=8083
-            - DATABASE_URL=postgres://postgres:postgres@psql-sponsors:5432/postgres
-            - ENV=development
+        env_file:
+            - .env
         networks:
             - default
             - sponsors-net
         ports:
-            - 8083:8083
+            - ${PORT}:${PORT}
         depends_on:
             psql-sponsors:
                 condition: service_healthy
@@ -33,7 +31,7 @@ services:
         volumes:
             - ./sql/initialize_database.sql:/docker-entrypoint-initdb.d/init.sql
         ports:
-            - 5428:5432
+            - 5427:5432
         networks:
             - sponsors-net
             

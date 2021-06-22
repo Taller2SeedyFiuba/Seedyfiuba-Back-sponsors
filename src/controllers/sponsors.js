@@ -1,6 +1,5 @@
 const { ApiError } = require("../errors/ApiError");
 const Sponsor = require("../models/sponsor")
-const Proxy = require("../proxy/proxy")
 
 
 async function search(req, res) {
@@ -27,8 +26,7 @@ async function create(req, res) {
   if (alreadyInDatabse){
     throw ApiError.badRequest("The user is already sponsoring this project")
   }
-  await Proxy.validateUserExistance(req.body.userid)
-  await Proxy.validateProjectExistance(req.body.projectid)
+
   const sponsor = await Sponsor.addSponsor(req.body)
   return res.status(200).json({
     status: "success",

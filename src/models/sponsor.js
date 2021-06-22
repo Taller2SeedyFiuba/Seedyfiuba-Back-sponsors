@@ -16,6 +16,10 @@ async function getSponsors(params) {
   const searchParams = { 
     'limit': params.limit || 10,
     'offset': (params.page - 1) * params.limit || 0,
+    'order': [
+      ['projectid', 'asc'],
+      ['userid', 'asc']
+    ],   
     'raw': true
   }   
   if (params.userid){
@@ -45,9 +49,9 @@ function validateNew(sponsor){
 function validateSearch(params){
   const JoiSchema = Joi.object({
     userid: Joi.string().max(255),
-    projectid: Joi.number().integer(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer()
+    projectid: Joi.number().integer().positive(),
+    limit: Joi.number().integer().positive(),
+    page: Joi.number().integer().positive()
   }).options({ abortEarly: false });
   
   return JoiSchema.validate(params);
