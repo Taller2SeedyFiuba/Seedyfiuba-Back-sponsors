@@ -1,10 +1,21 @@
 SET SEARCH_PATH TO 'public';
 
-/*
-Necesito guardar info de sponsors, favoritos y preferencias de usuario
-*/
-
-CREATE TYPE PROJECT_TYPE AS ENUM ('software', 'electronics', 'art');
+CREATE TYPE PROJECT_TYPE AS ENUM (
+	'comida', 
+	'arte', 
+	'periodismo',
+	'manualidades',
+	'música',
+	'danza',
+	'fotografía',
+	'diseño',
+	'publicaciones',
+	'tecnología',
+	'software',
+	'refugio',
+	'transporte',
+	'legal'
+);
 
 DROP TABLE IF EXISTS SponsorOf;
 
@@ -34,5 +45,22 @@ CREATE TABLE Preferences(
 
 ALTER TABLE Preferences ADD CONSTRAINT pk_Preferences PRIMARY KEY(userid, type);
 
+DROP TABLE IF EXISTS Viewers;
+
+CREATE TABLE Viewers(
+	userid VARCHAR(255) NOT NULL CHECK (userid <> '')
+);
+
+ALTER TABLE Viewers ADD CONSTRAINT pk_Viewers PRIMARY KEY(userid);
+
+DROP TABLE IF EXISTS ViewerOf;
+
+CREATE TABLE ViewerOf(
+	userid VARCHAR(255) NOT NULL CHECK (userid <> ''),
+	projectid INTEGER NOT NULL
+);
+
+ALTER TABLE ViewerOf ADD CONSTRAINT pk_ViewerOf PRIMARY KEY(userid, projectid);
+ALTER TABLE ViewerOf ADD CONSTRAINT fk_ViewerOf FOREIGN KEY(userid) REFERENCES Viewers ON DELETE CASCADE;
 
 
