@@ -7,7 +7,7 @@ This is a microservice that provides sponsors, favourites and reviewing function
 ### Built With
 
 * [ExpressJS](https://expressjs.com/)
-* [Firebase-Admin](https://firebase.google.com/)
+* [PostgreSQL](https://www.postgresql.org/)
 * [Docker](https://www.docker.com/)
 
 ### Deployed In
