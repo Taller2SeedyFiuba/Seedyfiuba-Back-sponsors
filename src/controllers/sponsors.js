@@ -24,7 +24,7 @@ async function create(req, res) {
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Sponsor.sponsorExists(req.body)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("The user is already sponsoring this project")
+    throw ApiError.badRequest("user-is-sponsoring")
   }
 
   const sponsor = await Sponsor.addSponsor(req.body)

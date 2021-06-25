@@ -33,7 +33,7 @@ async function createViewer(req, res) {
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Viewers.exists(req.body.userid)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("This user is currently a viewer")
+    throw ApiError.badRequest("user-is-viewer")
   }
   const viewer = await Viewers.addViewer(req.body)
   return res.status(200).json({
@@ -53,12 +53,12 @@ async function addProjectViewer(req, res) {
 
   const viewerInDatabse = await Viewers.exists(data.userid)
   if (!viewerInDatabse){
-    throw ApiError.badRequest("This user is not a viewer")
+    throw ApiError.badRequest("user-is-not-viewer")
   }
 
   const projectViewed = await Viewers.hasProject(data)
   if (projectViewed){
-    throw ApiError.badRequest("This user is currently reviewing this project")
+    throw ApiError.badRequest("user-is-viewing")
   }
 
   const viewerProject = await Viewers.addProject(data)

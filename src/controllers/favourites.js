@@ -23,7 +23,7 @@ async function create(req, res) {
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Favourites.favouriteExists(req.body)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("The user already has this project as favourite")
+    throw ApiError.badRequest("project-is-favourite")
   }
   
   const fav = await Favourites.addFavourite(req.body)
