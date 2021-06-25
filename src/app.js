@@ -1,6 +1,7 @@
 const express = require('express');
 const json = require('express').json;
 const morgan = require('morgan');
+const cors = require('cors');
 
 //Importamos rutas/endpoints
 const startRoutes = require("./routes/index");
@@ -14,6 +15,7 @@ function createApp(log=true){
     //Iniciamos la aplicacion
     const app = express();
     
+    app.use(cors());
     //Middlewares
     if(log) app.use(morgan('dev')); //Escupir a archivo con una ip y timestamp.
     app.use(json());
