@@ -7,7 +7,7 @@ async function create(req, res) {
 
   const alreadyInDatabse = await Preferences.getPreferences(req.body.id)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("Preferences has already been set for this user")
+    throw ApiError.badRequest("user-has-preferences")
   }
   
   const result = await Preferences.addPreferences(req.body)
@@ -27,7 +27,7 @@ async function update(req, res) {
 
     const alreadyInDatabse = await Preferences.getPreferences(req.params.id)
     if (!alreadyInDatabse){
-      throw ApiError.badRequest("This user does not have any preferences set yet")
+      throw ApiError.badRequest("user-not-have-preferences")
     }
     const result = await Preferences.updatePreferences(pref)
     return res.status(200).json({
