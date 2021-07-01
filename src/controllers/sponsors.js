@@ -22,12 +22,6 @@ async function search(req, res) {
 async function create(req, res) {
   const { error } = Sponsor.validateNew(req.body)
   if (error) throw ApiError.badRequest(error.message)
-  //Si ya existe no pasa nada
-  //NOTA: Existe una funcion findOrCreate en sequelize que puede optimizar esto.
-  //let sponsor = await Sponsor.getSponsor(req.body)
-  //if (!sponsor){
-  //
-  //}
   const sponsor = await Sponsor.addSponsor(req.body)
   return res.status(201).json({
     status: "success",
@@ -35,9 +29,9 @@ async function create(req, res) {
   });
 }
 
-
+/*
+LEGACY: Ver si hacemos un sistema de recomendacion basico o no
 async function recomend(req, res) {
-  //Pensar como hacer este algoritmo y que retornar.
   const dbParams = {
     userid: req.params.userid,
     limit: 100,
@@ -49,7 +43,7 @@ async function recomend(req, res) {
     data: sponsors
   });
 }
-
+*/
 
 module.exports = {
   search,
