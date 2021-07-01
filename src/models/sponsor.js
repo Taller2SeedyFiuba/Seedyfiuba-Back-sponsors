@@ -1,27 +1,29 @@
 const Joi = require("joi");
-const { 
+const {
   SponsorOf
 } = require("../database");
 
 
-async function sponsorExists(sponsor) {
+async function getSponsor(sponsor) {
   return await SponsorOf.findOne({ where: sponsor })
 }
 
 async function addSponsor(sponsor) {
-  return await SponsorOf.create(sponsor)
+  const [_sponsor, created] = await SponsorOf.findOrCreate({ where: sponsor, defaults: sponsor})
+  _sponsor.dataValues.newsponsor = created;
+  return _sponsor
 }
 
 async function getSponsors(params) {
-  const searchParams = { 
+  const searchParams = {
     'limit': params.limit || 10,
     'offset': (params.page - 1) * params.limit || 0,
     'order': [
       ['projectid', 'asc'],
       ['userid', 'asc']
-    ],   
+    ],
     'raw': true
-  }   
+  }
   if (params.userid){
     searchParams.where = { userid: params.userid }
   }
@@ -42,7 +44,7 @@ function validateNew(sponsor){
     userid: Joi.string().max(255).required(),
     projectid: Joi.number().integer().required()
   }).options({ abortEarly: false });
-  
+
   return JoiSchema.validate(sponsor);
 }
 
@@ -53,12 +55,12 @@ function validateSearch(params){
     limit: Joi.number().integer().positive(),
     page: Joi.number().integer().positive()
   }).options({ abortEarly: false });
-  
+
   return JoiSchema.validate(params);
 }
 
 module.exports = {
-  sponsorExists,
+  getSponsor,
   addSponsor,
   getSponsors,
   validateNew,

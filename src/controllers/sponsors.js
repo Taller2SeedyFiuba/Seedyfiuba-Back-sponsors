@@ -4,10 +4,10 @@ const Sponsor = require("../models/sponsor")
 
 async function search(req, res) {
   //Construimos el espacio de busqueda de la BD
-  const dbParams = { 
+  const dbParams = {
       userid: req.query.userid,
       projectid: req.query.projectid,
-      limit: req.query.limit, 
+      limit: req.query.limit,
       page: req.query.page
   }
   const { error } = Sponsor.validateSearch(dbParams)
@@ -22,13 +22,14 @@ async function search(req, res) {
 async function create(req, res) {
   const { error } = Sponsor.validateNew(req.body)
   if (error) throw ApiError.badRequest(error.message)
-  const alreadyInDatabse = await Sponsor.sponsorExists(req.body)
-  if (alreadyInDatabse){
-    throw ApiError.badRequest("user-is-sponsoring")
-  }
-
+  //Si ya existe no pasa nada
+  //NOTA: Existe una funcion findOrCreate en sequelize que puede optimizar esto.
+  //let sponsor = await Sponsor.getSponsor(req.body)
+  //if (!sponsor){
+  //
+  //}
   const sponsor = await Sponsor.addSponsor(req.body)
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: sponsor
   });
@@ -37,9 +38,9 @@ async function create(req, res) {
 
 async function recomend(req, res) {
   //Pensar como hacer este algoritmo y que retornar.
-  const dbParams = { 
+  const dbParams = {
     userid: req.params.userid,
-    limit: 100, 
+    limit: 100,
     page: 1
   }
   const sponsors = await Sponsor.getSponsors(dbParams)
@@ -50,7 +51,7 @@ async function recomend(req, res) {
 }
 
 
-module.exports = { 
+module.exports = {
   search,
   create,
   recomend
