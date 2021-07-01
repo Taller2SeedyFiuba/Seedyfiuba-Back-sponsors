@@ -47,6 +47,5 @@ async function recomend(req, res) {
 
 module.exports = {
   search,
-  create,
-  recomend
+  create
 }
