@@ -1,5 +1,6 @@
 const { ApiError } = require("../errors/ApiError");
 const Viewers = require("../models/viewers")
+const errMsg = require("../errors/messages")
 
 
 async function isViewer(req, res) {
@@ -12,10 +13,10 @@ async function isViewer(req, res) {
 
 async function search(req, res) {
   //Construimos el espacio de busqueda de la BD
-  const dbParams = { 
+  const dbParams = {
       userid: req.query.userid,
       projectid: req.query.projectid,
-      limit: req.query.limit, 
+      limit: req.query.limit,
       page: req.query.page
   }
   const { error } = Viewers.validateSearch(dbParams)
@@ -33,7 +34,7 @@ async function createViewer(req, res) {
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Viewers.exists(req.body.userid)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("user-is-viewer")
+    throw ApiError.badRequest(errMsg.USER_ALREADY_VIEWER)
   }
   const viewer = await Viewers.addViewer(req.body)
   return res.status(200).json({
@@ -47,18 +48,18 @@ async function addProjectViewer(req, res) {
       userid: req.params.id,
       projectid: req.body.projectid
   }
-  
+
   const { error } = Viewers.validateNewProject(data)
   if (error) throw ApiError.badRequest(error.message)
 
   const viewerInDatabse = await Viewers.exists(data.userid)
   if (!viewerInDatabse){
-    throw ApiError.badRequest("user-is-not-viewer")
+    throw ApiError.badRequest(errMsg.USER_NOT_VIEWER)
   }
 
   const projectViewed = await Viewers.hasProject(data)
   if (projectViewed){
-    throw ApiError.badRequest("user-is-viewing")
+    throw ApiError.badRequest(errMsg.USER_ALREADY_VIEWING_PROJECT)
   }
 
   const viewerProject = await Viewers.addProject(data)
@@ -68,7 +69,7 @@ async function addProjectViewer(req, res) {
   });
 }
 
-module.exports = { 
+module.exports = {
   isViewer,
   search,
   addProjectViewer,

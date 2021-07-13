@@ -1,12 +1,13 @@
 const { ApiError } = require("../errors/ApiError");
 const Favourites = require("../models/favourites")
+const errMsg = require("../errors/messages")
 
 async function search(req, res) {
   //Construimos el espacio de busqueda de la BD
-  const dbParams = { 
+  const dbParams = {
       userid: req.query.userid,
       projectid: req.query.projectid,
-      limit: req.query.limit, 
+      limit: req.query.limit,
       page: req.query.page
   }
   const { error } = Favourites.validateSearch(dbParams)
@@ -23,9 +24,9 @@ async function create(req, res) {
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Favourites.favouriteExists(req.body)
   if (alreadyInDatabse){
-    throw ApiError.badRequest("project-is-favourite")
+    throw ApiError.badRequest(errMsg.PROJECT_ALREADY_FAVOURITE)
   }
-  
+
   const fav = await Favourites.addFavourite(req.body)
   return res.status(200).json({
     status: "success",
@@ -33,7 +34,7 @@ async function create(req, res) {
   });
 }
 
-module.exports = { 
+module.exports = {
   search,
   create
 }
