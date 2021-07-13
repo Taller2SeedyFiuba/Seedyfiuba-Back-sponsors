@@ -1,3 +1,6 @@
+///LEGACY CODE
+///DELETE ALL OF THIS
+
 const { ApiError } = require("../errors/ApiError");
 const Preferences = require("../models/preferences")
 
@@ -9,7 +12,7 @@ async function create(req, res) {
   if (alreadyInDatabse){
     throw ApiError.badRequest("user-has-preferences")
   }
-  
+
   const result = await Preferences.addPreferences(req.body)
   return res.status(200).json({
     status: "success",
@@ -18,7 +21,7 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-    const pref = { 
+    const pref = {
       userid: req.params.id,
       preferences: req.body.preferences
     }
@@ -37,7 +40,7 @@ async function update(req, res) {
   }
 
 
-module.exports = { 
+module.exports = {
   create,
   update,
 }

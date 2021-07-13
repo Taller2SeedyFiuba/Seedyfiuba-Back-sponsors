@@ -36,7 +36,7 @@ Docker-cli must be installed.
 
 ## Usage
 
-```docker
+```
 docker-compose up --b
 ```
 
@@ -50,8 +50,8 @@ Swagger is used to document the API structure.
 ## Testing
 
 #### Unit Tests
-```npm
-npm run test
+```
+docker-compose build && docker-compose run --rm sponsor-service npm run test
 ```
 
 ## Production Deployment CI
