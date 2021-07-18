@@ -60,6 +60,15 @@ CREATE TABLE ViewerOf(
 	projectid INTEGER NOT NULL
 );
 
+INSERT INTO Viewers (userid)
+	VALUES ('C5Jeg8M5HKaIKOqXt5bZX7IdWFk2');
+
+INSERT INTO Viewers (userid)
+	VALUES ('pvs2jwbOFiZN4WOtQBYmr5LzLU53');
+
+INSERT INTO Viewers (userid)
+	VALUES ('sSbHAjsWp8X3mNJ6rd1JtQB4vtU2');
+
 ALTER TABLE ViewerOf ADD CONSTRAINT pk_ViewerOf PRIMARY KEY(userid, projectid);
 ALTER TABLE ViewerOf ADD CONSTRAINT fk_ViewerOf FOREIGN KEY(userid) REFERENCES Viewers ON DELETE CASCADE;
 

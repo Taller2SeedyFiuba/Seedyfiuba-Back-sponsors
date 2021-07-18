@@ -9,15 +9,10 @@ services:
         env_file:
             - .env
         networks:
-            - default
-            - sponsors-net
-        ports:
-            - ${PORT}:${PORT}
+            - my-net
         depends_on:
-            psql-sponsors:
-                condition: service_healthy
+            - psql-sponsors
         command: npm run dev
-        
     psql-sponsors:
         image: postgres
         container_name: psql-sponsors
@@ -30,15 +25,9 @@ services:
             retries: 5
         volumes:
             - ./sql/initialize_database.sql:/docker-entrypoint-initdb.d/init.sql
-        ports:
-            - 5427:5432
         networks:
-            - sponsors-net
-            
+            - my-net
 networks:
-    default:
-        external: true
-        name: my-net
-    sponsors-net:
-        driver: bridge
-        name: sponsors-net
+  my-net:
+    external:
+      name: my-net
