@@ -1,7 +1,9 @@
 const Joi = require("joi");
-const { 
+const {
   Viewer,
-  ViewerOf
+  ViewerOf,
+  sequelize,
+  Sequelize
 } = require("../database");
 
 
@@ -22,15 +24,15 @@ async function addProject(data) {
 }
 
 async function getViewers(params) {
-  const searchParams = { 
+  const searchParams = {
     'limit': params.limit || 10,
     'offset': (params.page - 1) * params.limit || 0,
     'order': [
       ['projectid', 'asc'],
       ['userid', 'asc']
-    ],   
+    ],
     'raw': true
-  }   
+  }
   if (params.userid){
     searchParams.where = { userid: params.userid }
   }
@@ -45,11 +47,46 @@ async function getViewers(params) {
 }
 
 
+const castAndCumulateMetric = function(data){
+  if (!data) return null
+  let sum = 0;
+  return data.map(elem => {
+    sum += Number(elem.metric)
+    elem.metric = sum
+    return elem
+  })
+}
+
+const getViewersMetrics = async(params) => {
+  aggDateFunction = sequelize.fn('date_trunc', params.timeinterval || 'day', sequelize.col('promotedate'))
+
+  const searchParams = {
+    'group': [aggDateFunction],
+    'attributes': [
+      [aggDateFunction, 'timestamp'],
+      [sequelize.fn('COUNT', aggDateFunction), 'metric']
+    ],
+    'signindate': {
+      [Sequelize.Op.gte]: params.fromdate || '1800-01-01',
+      [Sequelize.Op.lte]: params.todate || '2200-01-01'
+    },
+    'order': [[aggDateFunction, 'ASC']],
+    'raw': true
+  }
+
+  const result = {
+    'viewershistory': castAndCumulateMetric(await Viewer.findAll(searchParams))
+  }
+
+  return result
+}
+
+
 function validateNewViewer(viewer){
   const JoiSchema = Joi.object({
     userid: Joi.string().max(255).required()
   }).options({ abortEarly: false });
-  
+
   return JoiSchema.validate(viewer);
 }
 
@@ -59,19 +96,8 @@ function validateNewProject(viewer){
     userid: Joi.string().max(255).required(),
     projectid: Joi.number().integer().required()
   }).options({ abortEarly: false });
-  
-  return JoiSchema.validate(viewer);
-}
 
-function validateSearch(params){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255),
-    projectid: Joi.number().integer().positive(),
-    limit: Joi.number().integer().positive(),
-    page: Joi.number().integer().positive()
-  }).options({ abortEarly: false });
-  
-  return JoiSchema.validate(params);
+  return JoiSchema.validate(viewer);
 }
 
 module.exports = {
@@ -82,5 +108,5 @@ module.exports = {
   addProject,
   validateNewViewer,
   validateNewProject,
-  validateSearch
+  getViewersMetrics
 }

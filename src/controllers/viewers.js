@@ -1,5 +1,6 @@
 const { ApiError } = require("../errors/ApiError");
 const Viewers = require("../models/viewers")
+const validator = require("../models/validator")
 const errMsg = require("../errors/messages")
 
 
@@ -19,7 +20,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = Viewers.validateSearch(dbParams)
+  const { error } = validator.validateSearch(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const viewers = await Viewers.getViewers(dbParams)
   return res.status(200).json({

@@ -8,12 +8,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.CHAR(255),
         allowNull: false,
         primaryKey: true
-      }  
+      },
+      promotedate: {
+        type: DataTypes.DATE
+      },
       }, {
         tableName: 'viewers',
         timestamps: false,
     }
   );
+
+  //Viewer.beforeCreate((viewer, options) => {
+  //  viewer.promotedate = new Date().toISOString();
+  //})
+
   Viewer.associate = function (models) {
     models.Viewer.hasMany(models.ViewerOf, {foreignKey: 'userid'})
   }

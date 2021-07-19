@@ -1,5 +1,6 @@
 const { ApiError } = require("../errors/ApiError");
 const Sponsor = require("../models/sponsor")
+const validator = require("../models/validator")
 
 
 async function search(req, res) {
@@ -10,7 +11,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = Sponsor.validateSearch(dbParams)
+  const { error } = validator.validateSearch(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const sponsors = await Sponsor.getSponsors(dbParams)
   return res.status(200).json({

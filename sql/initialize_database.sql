@@ -48,7 +48,8 @@ ALTER TABLE Preferences ADD CONSTRAINT pk_Preferences PRIMARY KEY(userid, type);
 DROP TABLE IF EXISTS Viewers;
 
 CREATE TABLE Viewers(
-	userid VARCHAR(255) NOT NULL CHECK (userid <> '')
+	userid VARCHAR(255) NOT NULL CHECK (userid <> ''),
+	promotedate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE Viewers ADD CONSTRAINT pk_Viewers PRIMARY KEY(userid);

@@ -1,5 +1,6 @@
 const { ApiError } = require("../errors/ApiError");
 const Favourites = require("../models/favourites")
+const validator = require("../models/validator")
 const errMsg = require("../errors/messages")
 
 async function search(req, res) {
@@ -10,7 +11,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = Favourites.validateSearch(dbParams)
+  const { error } = validator.validateSearch(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const favs = await Favourites.getFavourites(dbParams)
   return res.status(200).json({

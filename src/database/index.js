@@ -50,4 +50,6 @@ db.checkStatus = async function(verbose=false){
   }
 }
 
+//sequelize.sync()
+
 module.exports = db;
