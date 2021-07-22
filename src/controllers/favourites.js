@@ -11,7 +11,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = validator.validateSearch(dbParams)
+  const { error } = validator.Search(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const favs = await Favourites.getFavourites(dbParams)
   return res.status(200).json({
@@ -21,7 +21,7 @@ async function search(req, res) {
 }
 
 async function create(req, res) {
-  const { error } = Favourites.validateNew(req.body)
+  const { error } = validator.Favourite(req.body)
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Favourites.favouriteExists(req.body)
   if (alreadyInDatabse){

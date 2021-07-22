@@ -11,7 +11,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = validator.validateSearch(dbParams)
+  const { error } = validator.Search(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const sponsors = await Sponsor.getSponsors(dbParams)
   return res.status(200).json({
@@ -21,7 +21,7 @@ async function search(req, res) {
 }
 
 async function create(req, res) {
-  const { error } = Sponsor.validateNew(req.body)
+  const { error } = validator.Sponsor(req.body)
   if (error) throw ApiError.badRequest(error.message)
   const sponsor = await Sponsor.addSponsor(req.body)
   return res.status(201).json({
@@ -29,22 +29,6 @@ async function create(req, res) {
     data: sponsor
   });
 }
-
-/*
-LEGACY: Ver si hacemos un sistema de recomendacion basico o no
-async function recomend(req, res) {
-  const dbParams = {
-    userid: req.params.userid,
-    limit: 100,
-    page: 1
-  }
-  const sponsors = await Sponsor.getSponsors(dbParams)
-  return res.status(200).json({
-    status: "success",
-    data: sponsors
-  });
-}
-*/
 
 module.exports = {
   search,

@@ -13,8 +13,8 @@ async function exists(userid) {
 }
 
 async function hasProject(viewer) {
-    return await ViewerOf.findOne({ where: viewer }) ? true : false
-  }
+  return await ViewerOf.findOne({ where: viewer }) ? true : false
+}
 
 async function addViewer(viewer) {
   return await Viewer.create(viewer)
@@ -92,35 +92,6 @@ const getViewersMetrics = async(params) => {
   return result
 }
 
-
-function validateNewViewer(viewer){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(viewer);
-}
-
-
-function validateNewProject(viewer){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(viewer);
-}
-
-function validateNewVote(vote){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required(),
-    stage:  Joi.number().integer().min(0).required(),
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(vote);
-}
-
 module.exports = {
   exists,
   hasProject,
@@ -129,8 +100,5 @@ module.exports = {
   addProject,
   addVote,
   hasVoted,
-  getViewersMetrics,
-  validateNewViewer,
-  validateNewProject,
-  validateNewVote
+  getViewersMetrics
 }

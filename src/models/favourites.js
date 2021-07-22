@@ -35,20 +35,8 @@ async function getFavourites(params) {
   return await FavouriteProjects.findAll(searchParams)
 }
 
-
-function validateNew(fav){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(fav);
-}
-
-
 module.exports = {
   favouriteExists,
   addFavourite,
-  getFavourites,
-  validateNew
+  getFavourites
 }

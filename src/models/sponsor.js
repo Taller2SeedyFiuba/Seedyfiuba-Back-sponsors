@@ -37,20 +37,8 @@ async function getSponsors(params) {
   return await SponsorOf.findAll(searchParams)
 }
 
-
-
-function validateNew(sponsor){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(sponsor);
-}
-
 module.exports = {
   getSponsor,
   addSponsor,
-  getSponsors,
-  validateNew
+  getSponsors
 }

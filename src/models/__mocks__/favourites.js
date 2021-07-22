@@ -20,10 +20,6 @@ const getFavourites = async(params) => {
     return favourites
 }
 
-const validateNew = (param) => {
-  return true
-}
-
 const validateSearch = (param) => {
   return true
 }
@@ -32,6 +28,5 @@ module.exports = {
   favouriteExists,
   addFavourite,
   getFavourites,
-  validateNew,
   validateSearch
 };
