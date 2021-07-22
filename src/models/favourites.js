@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { 
+const {
   FavouriteProjects,
 } = require("../database");
 
@@ -13,7 +13,7 @@ async function addFavourite(fav) {
 }
 
 async function getFavourites(params) {
-  const searchParams = { 
+  const searchParams = {
     'limit': params.limit || 10,
     'offset': (params.page - 1) * params.limit || 0,
     'raw': true,
@@ -21,7 +21,7 @@ async function getFavourites(params) {
       ['projectid', 'asc'],
       ['userid', 'asc']
     ]
-  }   
+  }
   if (params.userid){
     searchParams.where = { userid: params.userid }
   }
@@ -35,31 +35,8 @@ async function getFavourites(params) {
   return await FavouriteProjects.findAll(searchParams)
 }
 
-
-function validateNew(fav){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required()
-  }).options({ abortEarly: false });
-  
-  return JoiSchema.validate(fav);
-}
-
-function validateSearch(params){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255),
-    projectid: Joi.number().integer().positive(),
-    limit: Joi.number().integer().positive(),
-    page: Joi.number().integer().positive()
-  }).options({ abortEarly: false });
-  
-  return JoiSchema.validate(params);
-}
-
 module.exports = {
   favouriteExists,
   addFavourite,
-  getFavourites,
-  validateNew,
-  validateSearch
+  getFavourites
 }

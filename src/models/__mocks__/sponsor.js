@@ -20,10 +20,6 @@ const getSponsors = async(params) => {
     return sponsors
 }
 
-const validateNew = (param) => {
-  return true
-}
-
 const validateSearch = (param) => {
   return true
 }
@@ -32,6 +28,5 @@ module.exports = {
   sponsorExists,
   addSponsor,
   getSponsors,
-  validateNew,
   validateSearch
 };

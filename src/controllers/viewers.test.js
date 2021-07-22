@@ -1,11 +1,14 @@
 const {
-    search,
-    create,
-    recomend
-  } = require('./sponsors');
+  isViewer,
+  search,
+  addProjectViewer,
+  createViewer,
+  viewerVoteProject
+} = require('./viewers');
 const { ApiError } = require('../errors/ApiError')
-jest.mock('../models/sponsor');
-jest.mock('../proxy/proxy');
+const { db } = require('../models/__mocks__/viewers')
+
+jest.mock('../models/viewers');
 
 const mockResponse = () => {
   const res = {};
@@ -14,7 +17,7 @@ const mockResponse = () => {
   return res;
 };
 
-test('/searchSponsors successful response', async () => {
+test('/search successful response', async () => {
   const req = {
     query: {
       projectid: 1
@@ -23,16 +26,7 @@ test('/searchSponsors successful response', async () => {
   const resObj = {
     data: {
       status: 'success',
-      data: [
-        {
-          "userid": "userid1",
-          "projectid": '1',
-        },
-        {
-          "userid": "userid2",
-          "projectid": '1',
-        }
-      ]
+      data: db.viewers
     }
   };
 
@@ -44,7 +38,8 @@ test('/searchSponsors successful response', async () => {
   expect(res.json).toHaveBeenCalledWith(resObj.data);
 });
 
-test('/searchSponsors error response, bad parameters', async () => {
+
+test('/search error response, bad parameters', async () => {
   const req = {
     query: {
       projectid: 'bad-parameter'
@@ -62,47 +57,50 @@ test('/searchSponsors error response, bad parameters', async () => {
   }
 });
 
-test('/createSponsor successful response', async () => {
-  const sponsor = {
-    userid: 'userid3',
-    projectid: '23'
-  }
+test('/createViewer successful response', async () => {
+
   const req = {
-    body: sponsor
+    body: {
+      userid: 'userid3'
+    }
   };
 
   const resObj = {
     data: {
       status: 'success',
-      data: sponsor
+      data: req.body
     }
   };
 
   const res = mockResponse();
 
-  await create(req, res);
+  await createViewer(req, res);
 
   expect(res.status).toHaveBeenCalledWith(201);
   expect(res.json).toHaveBeenCalledWith(resObj.data);
+
 });
+
+/*
 
 test('/createSponsor error response, bad body', async () => {
 
-  const req = {
-    body: {
-      userid: 5,//Wrong id
-      projectid: '23'
-    }
-  };
-
-  const res = mockResponse();
-
-  expect.assertions(2);
-
-  try{
-    await create(req, res);
-  } catch(err){
-    expect(err).toBeInstanceOf(ApiError);
-    expect(err).toHaveProperty('code', 400);
+const req = {
+  body: {
+    userid: 5,//Wrong id
+    projectid: '23'
   }
+};
+
+const res = mockResponse();
+
+expect.assertions(2);
+
+try{
+  await create(req, res);
+} catch(err){
+  expect(err).toBeInstanceOf(ApiError);
+  expect(err).toHaveProperty('code', 400);
+}
 });
+*/

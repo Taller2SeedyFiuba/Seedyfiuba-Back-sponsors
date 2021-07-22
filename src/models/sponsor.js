@@ -37,32 +37,8 @@ async function getSponsors(params) {
   return await SponsorOf.findAll(searchParams)
 }
 
-
-
-function validateNew(sponsor){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255).required(),
-    projectid: Joi.number().integer().required()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(sponsor);
-}
-
-function validateSearch(params){
-  const JoiSchema = Joi.object({
-    userid: Joi.string().max(255),
-    projectid: Joi.number().integer().positive(),
-    limit: Joi.number().integer().positive(),
-    page: Joi.number().integer().positive()
-  }).options({ abortEarly: false });
-
-  return JoiSchema.validate(params);
-}
-
 module.exports = {
   getSponsor,
   addSponsor,
-  getSponsors,
-  validateNew,
-  validateSearch
+  getSponsors
 }

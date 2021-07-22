@@ -1,5 +1,6 @@
 const { ApiError } = require("../errors/ApiError");
 const Viewers = require("../models/viewers")
+const validator = require("../models/validator")
 const errMsg = require("../errors/messages")
 
 
@@ -19,7 +20,7 @@ async function search(req, res) {
       limit: req.query.limit,
       page: req.query.page
   }
-  const { error } = Viewers.validateSearch(dbParams)
+  const { error } = validator.Search(dbParams)
   if (error) throw ApiError.badRequest(error.message)
   const viewers = await Viewers.getViewers(dbParams)
   return res.status(200).json({
@@ -30,14 +31,14 @@ async function search(req, res) {
 
 
 async function createViewer(req, res) {
-  const { error } = Viewers.validateNewViewer(req.body)
+  const { error } = validator.Viewer(req.body)
   if (error) throw ApiError.badRequest(error.message)
   const alreadyInDatabse = await Viewers.exists(req.body.userid)
   if (alreadyInDatabse){
     throw ApiError.badRequest(errMsg.USER_ALREADY_VIEWER)
   }
   const viewer = await Viewers.addViewer(req.body)
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: viewer
   });
@@ -49,7 +50,7 @@ async function addProjectViewer(req, res) {
       projectid: req.body.projectid
   }
 
-  const { error } = Viewers.validateNewProject(data)
+  const { error } = validator.ViewerProject(data)
   if (error) throw ApiError.badRequest(error.message)
 
   const viewerInDatabse = await Viewers.exists(data.userid)
@@ -69,9 +70,47 @@ async function addProjectViewer(req, res) {
   });
 }
 
+
+async function viewerVoteProject(req, res) {
+
+  const viewer = {
+    userid: req.params.id,
+    projectid: req.body.projectid
+  }
+
+  const vote = {
+    userid: viewer.userid,
+    projectid: viewer.projectid,
+    stage: req.body.stage
+  }
+
+  const { error } = validator.Vote(vote)
+  if (error) throw ApiError.badRequest(error.message)
+
+  const isViewer = await Viewers.hasProject(viewer)
+  if (!isViewer){
+    throw ApiError.badRequest(errMsg.USER_NOT_VIEWER_OF_PROJECT)
+  }
+
+  const voted = await Viewers.hasVoted(vote)
+  if (voted){
+    throw ApiError.badRequest(errMsg.USER_ALREADY_VOTED)
+  }
+
+  const result = await Viewers.addVote(vote)
+
+  return res.status(201).json({
+    status: "success",
+    data: result
+  });
+}
+
+
+
 module.exports = {
   isViewer,
   search,
   addProjectViewer,
-  createViewer
+  createViewer,
+  viewerVoteProject
 }
