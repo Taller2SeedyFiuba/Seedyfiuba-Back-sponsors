@@ -1,8 +1,8 @@
 SET SEARCH_PATH TO 'public';
 
 CREATE TYPE PROJECT_TYPE AS ENUM (
-	'comida', 
-	'arte', 
+	'comida',
+	'arte',
 	'periodismo',
 	'manualidades',
 	'música',
@@ -61,6 +61,21 @@ CREATE TABLE ViewerOf(
 	projectid INTEGER NOT NULL
 );
 
+ALTER TABLE ViewerOf ADD CONSTRAINT pk_ViewerOf PRIMARY KEY(userid, projectid);
+ALTER TABLE ViewerOf ADD CONSTRAINT fk_ViewerOf FOREIGN KEY(userid) REFERENCES Viewers ON DELETE CASCADE;
+
+DROP TABLE IF EXISTS VotedFor;
+
+CREATE TABLE VotedFor(
+	userid VARCHAR(255) NOT NULL CHECK (userid <> ''),
+  projectid INTEGER NOT NULL,
+  stage INTEGER NOT NULL CHECK (stage >= 0),
+	votingdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE VotedFor ADD CONSTRAINT pk_VotedFor PRIMARY KEY(userid, projectid, stage);
+ALTER TABLE VotedFor ADD CONSTRAINT fk_VotedFor FOREIGN KEY(userid, projectid) REFERENCES ViewerOf ON DELETE CASCADE;
+
 INSERT INTO Viewers (userid)
 	VALUES ('C5Jeg8M5HKaIKOqXt5bZX7IdWFk2');
 
@@ -69,8 +84,5 @@ INSERT INTO Viewers (userid)
 
 INSERT INTO Viewers (userid)
 	VALUES ('sSbHAjsWp8X3mNJ6rd1JtQB4vtU2');
-
-ALTER TABLE ViewerOf ADD CONSTRAINT pk_ViewerOf PRIMARY KEY(userid, projectid);
-ALTER TABLE ViewerOf ADD CONSTRAINT fk_ViewerOf FOREIGN KEY(userid) REFERENCES Viewers ON DELETE CASCADE;
 
 

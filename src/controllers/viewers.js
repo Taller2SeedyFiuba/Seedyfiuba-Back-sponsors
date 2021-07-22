@@ -70,9 +70,47 @@ async function addProjectViewer(req, res) {
   });
 }
 
+
+async function viewerVoteProject(req, res) {
+
+  const viewer = {
+    userid: req.params.id,
+    projectid: req.body.projectid
+  }
+
+  const vote = {
+    userid: viewer.userid,
+    projectid: viewer.projectid,
+    stage: req.body.stage
+  }
+
+  const { error } = Viewers.validateNewVote(vote)
+  if (error) throw ApiError.badRequest(error.message)
+
+  const isViewer = await Viewers.hasProject(viewer)
+  if (!isViewer){
+    throw ApiError.badRequest(errMsg.USER_NOT_VIEWER_OF_PROJECT)
+  }
+
+  const voted = await Viewers.hasVoted(vote)
+  if (voted){
+    throw ApiError.badRequest(errMsg.USER_ALREADY_VOTED)
+  }
+
+  const result = await Viewers.addVote(vote)
+
+  return res.status(201).json({
+    status: "success",
+    data: result
+  });
+}
+
+
+
 module.exports = {
   isViewer,
   search,
   addProjectViewer,
-  createViewer
+  createViewer,
+  viewerVoteProject
 }

@@ -2,6 +2,7 @@ const Joi = require("joi");
 const {
   Viewer,
   ViewerOf,
+  VotedFor,
   sequelize,
   Sequelize
 } = require("../database");
@@ -46,6 +47,14 @@ async function getViewers(params) {
   return await ViewerOf.findAll(searchParams)
 }
 
+async function addVote(vote) {
+  return await VotedFor.create(vote)
+}
+
+async function hasVoted(vote) {
+  return await VotedFor.findOne({ where : vote }) ? true : false
+}
+
 
 const castAndCumulateMetric = function(data){
   if (!data) return null
@@ -66,9 +75,11 @@ const getViewersMetrics = async(params) => {
       [aggDateFunction, 'timestamp'],
       [sequelize.fn('COUNT', aggDateFunction), 'metric']
     ],
-    'signindate': {
-      [Sequelize.Op.gte]: params.fromdate || '1800-01-01',
-      [Sequelize.Op.lte]: params.todate || '2200-01-01'
+    'where': {
+      'promotedate': {
+        [Sequelize.Op.gte]: params.fromdate || '1800-01-01',
+        [Sequelize.Op.lte]: params.todate || '2200-01-01'
+      }
     },
     'order': [[aggDateFunction, 'ASC']],
     'raw': true
@@ -100,13 +111,26 @@ function validateNewProject(viewer){
   return JoiSchema.validate(viewer);
 }
 
+function validateNewVote(vote){
+  const JoiSchema = Joi.object({
+    userid: Joi.string().max(255).required(),
+    projectid: Joi.number().integer().required(),
+    stage:  Joi.number().integer().min(0).required(),
+  }).options({ abortEarly: false });
+
+  return JoiSchema.validate(vote);
+}
+
 module.exports = {
   exists,
   hasProject,
   getViewers,
   addViewer,
   addProject,
+  addVote,
+  hasVoted,
+  getViewersMetrics,
   validateNewViewer,
   validateNewProject,
-  getViewersMetrics
+  validateNewVote
 }

@@ -6,6 +6,6 @@ router.get('/', hocError(pc.search))                            //Buscar entre t
 router.get('/:id', hocError(pc.isViewer))                            //Consultar si el usuario es veedor
 router.post('/', hocError(pc.createViewer));                    //Crea un nuevo veedor
 router.post('/:id/projects', hocError(pc.addProjectViewer));    //Conecta a un veedor existente con un proyecto
-//Votar a un proyecto? -> Quizas se encarga unicamente la blockchain
+router.post('/:id/vote', hocError(pc.viewerVoteProject))
 
 module.exports = router;
