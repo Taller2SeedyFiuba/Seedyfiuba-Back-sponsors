@@ -8,7 +8,7 @@ async function getMetrics(req, res) {
 
   const dbParams = req.query
 
-  const { error } = validator.validateMetrics(dbParams);
+  const { error } = validator.Metrics(dbParams);
   if (error) throw ApiError.badRequest(error.message);
 
   const metrics = await getViewersMetrics(dbParams)
