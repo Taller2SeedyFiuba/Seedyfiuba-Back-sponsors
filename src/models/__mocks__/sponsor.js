@@ -1,15 +1,16 @@
 const sponsors = [{
     "userid": "userid1",
-    "projectid": '1',
+    "projectid": 1,
   },
   {
     "userid": "userid2",
-    "projectid": '1',
+    "projectid": 1,
   }
 ]
 
 const sponsorExists = async(sponsor) => {
-  return 0
+  const cmp = JSON.stringify(sponsor)
+  return sponsors.some(_sponsor => JSON.stringify(_sponsor) == cmp)
 }
 
 const addSponsor = async(sponsor) => {
@@ -17,16 +18,14 @@ const addSponsor = async(sponsor) => {
 }
 
 const getSponsors = async(params) => {
-    return sponsors
-}
-
-const validateSearch = (param) => {
-  return true
+  return sponsors
 }
 
 module.exports = {
   sponsorExists,
   addSponsor,
   getSponsors,
-  validateSearch
+  db:{
+    sponsors
+  }
 };

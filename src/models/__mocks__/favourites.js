@@ -1,15 +1,17 @@
-const favourites = [{
+const favourites = [
+  {
     "userid": "userid1",
-    "projectid": '1',
+    "projectid": 1,
   },
   {
     "userid": "userid2",
-    "projectid": '1',
+    "projectid": 1,
   }
 ]
 
 const favouriteExists = async(fav) => {
-  return 0
+  const cmp = JSON.stringify(fav)
+  return favourites.some(_fav => JSON.stringify(_fav) == cmp)
 }
 
 const addFavourite = async(fav) => {
@@ -17,16 +19,14 @@ const addFavourite = async(fav) => {
 }
 
 const getFavourites = async(params) => {
-    return favourites
-}
-
-const validateSearch = (param) => {
-  return true
+  return favourites
 }
 
 module.exports = {
   favouriteExists,
   addFavourite,
   getFavourites,
-  validateSearch
+  db:{
+    favourites
+  }
 };
