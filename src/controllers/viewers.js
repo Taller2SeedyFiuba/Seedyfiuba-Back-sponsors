@@ -64,7 +64,7 @@ async function addProjectViewer(req, res) {
   }
 
   const viewerProject = await Viewers.addProject(data)
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: viewerProject
   });
