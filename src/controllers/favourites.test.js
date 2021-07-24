@@ -5,7 +5,6 @@ const {
 const { ApiError } = require('../errors/ApiError')
 const errMsg = require('../errors/messages')
 jest.mock('../models/favourites');
-jest.mock('../proxy/proxy');
 
 const mockResponse = () => {
   const res = {};

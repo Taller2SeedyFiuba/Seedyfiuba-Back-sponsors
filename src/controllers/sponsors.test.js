@@ -5,7 +5,6 @@ const {
   } = require('./sponsors');
 const { ApiError } = require('../errors/ApiError')
 jest.mock('../models/sponsor');
-jest.mock('../proxy/proxy');
 
 const mockResponse = () => {
   const res = {};
