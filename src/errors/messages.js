@@ -3,6 +3,7 @@ module.exports = {
   USER_NOT_FOUND: 'user-not-found',
   PROJECT_NOT_FOUND: 'project-not-found',
   PROJECT_ALREADY_FAVOURITE: 'project-is-favourite',
+  PROJECT_NOT_FAVOURITE: 'project-not-favourite',
   USER_ALREADY_VIEWER: 'user-is-viewer',
   USER_NOT_VIEWER: 'user-is-not-viewer',
   USER_ALREADY_VIEWING_PROJECT: 'user-is-viewing',

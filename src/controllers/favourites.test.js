@@ -3,9 +3,9 @@ const {
     create
   } = require('./favourites');
 const { ApiError } = require('../errors/ApiError')
-const errMsg = require('../errors/messages')
+const errMsg = require('../errors/messages');
+const { db } = require('../models/__mocks__/favourites');
 jest.mock('../models/favourites');
-jest.mock('../proxy/proxy');
 
 const mockResponse = () => {
   const res = {};
@@ -14,7 +14,7 @@ const mockResponse = () => {
   return res;
 };
 
-test('/searchFavourites successful response', async () => {
+test('/search successful response', async () => {
   const req = {
     query: {
       projectid: 1
@@ -23,16 +23,7 @@ test('/searchFavourites successful response', async () => {
   const resObj = {
     data: {
       status: 'success',
-      data: [
-        {
-          "userid": "userid1",
-          "projectid": '1',
-        },
-        {
-          "userid": "userid2",
-          "projectid": '1',
-        }
-      ]
+      data: db.favourites
     }
   };
 
@@ -45,7 +36,7 @@ test('/searchFavourites successful response', async () => {
 });
 
 
-test('/searchFavourites error response, bad parameters', async () => {
+test('/search error response, bad parameters', async () => {
   const req = {
     query: {
       projectid: 'bad-parameter'
@@ -63,10 +54,10 @@ test('/searchFavourites error response, bad parameters', async () => {
   }
 });
 
-test('/createFavourites successful response', async () => {
+test('/create successful response', async () => {
   const favourite = {
     userid: 'userid3',
-    projectid: '23'
+    projectid: 23
   }
   const req = {
     body: favourite
@@ -88,12 +79,12 @@ test('/createFavourites successful response', async () => {
 });
 
 
-test('/createFavourites error response, bad body', async () => {
+test('/create error response, bad body', async () => {
 
   const req = {
     body: {
       userid: 5,//Wrong id
-      projectid: '23'
+      projectid: 23
     }
   };
 
@@ -109,27 +100,27 @@ test('/createFavourites error response, bad body', async () => {
   }
 });
 
-/*
-test('/createFavourites error response, bad body', async () => {
+
+test('/create error response, already exists', async () => {
 
   const req = {
     body: {
-      userid: 5,//Wrong id
-      projectid: '23'
+      userid: 'userid1',
+      projectid: 1
     }
   };
 
-  const expectedThrow = new ApiError(404, errMsg.USER_NOT_FOUND);
+  const expectedThrow = new ApiError(400, errMsg.PROJECT_ALREADY_FAVOURITE);
 
   const res = mockResponse();
 
   expect.assertions(2);
 
   try{
-    await getOneUser(req, res);
+    await create(req, res);
   } catch(err){
     expect(err).toBeInstanceOf(ApiError);
     expect(err).toEqual(expectedThrow)
   }
 });
-*/
+

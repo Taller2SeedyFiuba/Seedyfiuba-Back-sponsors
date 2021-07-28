@@ -10,38 +10,39 @@ const viewers = [
 const viewerOf = [
   {
     "userid": "userid1",
-    "projectid": '1',
+    "projectid": 1,
   },
   {
     "userid": "userid2",
-    "projectid": '1',
+    "projectid": 1,
   }
 ]
 
 const votes = [
   {
     "userid": "userid1",
-    "projectid": '1',
+    "projectid": 1,
     "stage": 0,
   },
   {
     "userid": "userid1",
-    "projectid": '1',
+    "projectid": 1,
     "stage": 1,
   },
   {
     "userid": "userid2",
-    "projectid": '1',
+    "projectid": 1,
     "stage": 0
   }
 ]
 
-const exists = async(viewer) => {
-  return viewers.includes(viewer)
+const exists = id => {
+  return viewers.find(viewer => viewer.userid == id) != undefined
 }
 
 const hasProject = async(viewerProject) => {
-  return viewerOf.includes(viewerProject)
+  const cmp = JSON.stringify(viewerProject)
+  return viewerOf.some(viewer => JSON.stringify(viewer) == cmp)
 }
 
 const addViewer = async(viewer) => {
@@ -57,7 +58,8 @@ const addVote = async(vote) => {
 }
 
 const hasVoted = async(vote) => {
-  return votes.includes(vote)
+  const cmp = JSON.stringify(vote)
+  return viewerOf.some(_vote => JSON.stringify(_vote) == cmp)
 }
 
 const getViewers = async(params) => {

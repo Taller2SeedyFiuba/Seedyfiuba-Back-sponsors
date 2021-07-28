@@ -1,11 +1,11 @@
 const {
     search,
-    create,
-    recomend
+    create
   } = require('./sponsors');
 const { ApiError } = require('../errors/ApiError')
+const { db } = require('../models/__mocks__/sponsor');
+const errMsg = require('../errors/messages');
 jest.mock('../models/sponsor');
-jest.mock('../proxy/proxy');
 
 const mockResponse = () => {
   const res = {};
@@ -23,16 +23,7 @@ test('/searchSponsors successful response', async () => {
   const resObj = {
     data: {
       status: 'success',
-      data: [
-        {
-          "userid": "userid1",
-          "projectid": '1',
-        },
-        {
-          "userid": "userid2",
-          "projectid": '1',
-        }
-      ]
+      data: db.sponsors
     }
   };
 
@@ -65,7 +56,7 @@ test('/searchSponsors error response, bad parameters', async () => {
 test('/createSponsor successful response', async () => {
   const sponsor = {
     userid: 'userid3',
-    projectid: '23'
+    projectid: 23
   }
   const req = {
     body: sponsor
@@ -91,7 +82,7 @@ test('/createSponsor error response, bad body', async () => {
   const req = {
     body: {
       userid: 5,//Wrong id
-      projectid: '23'
+      projectid: 23
     }
   };
 
