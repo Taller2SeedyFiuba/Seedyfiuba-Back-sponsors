@@ -35,7 +35,30 @@ async function create(req, res) {
   });
 }
 
+async function deleteFavourite(req, res) {
+  const toDelete = {
+    userid: req.params.userid,
+    projectid: req.params.projectid
+  }
+
+  const { error } = validator.Favourite(toDelete)
+  if (error) throw ApiError.badRequest(error.message)
+  const favInDatabase = await Favourites.favouriteExists(toDelete)
+  if (!favInDatabase){
+    throw ApiError.badRequest(errMsg.PROJECT_NOT_FAVOURITE)
+  }
+
+  const fav = await Favourites.deleteFavourite(toDelete)
+
+  return res.status(200).json({
+    status: "success",
+    data: fav
+  });
+}
+
+
 module.exports = {
   search,
-  create
+  create,
+  deleteFavourite
 }

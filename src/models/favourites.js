@@ -12,6 +12,16 @@ async function addFavourite(fav) {
   return await FavouriteProjects.create(fav)
 }
 
+async function deleteFavourite(fav) {
+  const result = await FavouriteProjects.destroy({
+    where: {
+      userid: fav.userid,
+      projectid: fav.projectid
+    }
+  })
+  return result ? fav : 0
+}
+
 async function getFavourites(params) {
   const searchParams = {
     'limit': params.limit || 10,
@@ -38,5 +48,6 @@ async function getFavourites(params) {
 module.exports = {
   favouriteExists,
   addFavourite,
-  getFavourites
+  getFavourites,
+  deleteFavourite
 }
