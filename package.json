@@ -6,7 +6,7 @@
   "scripts": {
     "db": "sequelize-cli db:migrate && sequelize-cli db:seed:undo:all && sequelize-cli db:seed:all",
     "dev": "npm run db && nodemon --inspect=0.0.0.0:8000 src/index.js",
-    "start": "npm run db && sequelize-cli db:seed:all && node src/index.js",
+    "start": "npm run db && node src/index.js",
     "test": "jest --collectCoverage"
   },
   "repository": {
