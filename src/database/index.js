@@ -8,7 +8,6 @@ const modelsDirectory = __dirname + '/models'
 const { env, databaseURL } = require('../config')
 const { logDebug, logInfo } = require('../utils/log')
 const db = {};
-let options = { logging: logDebug };
 
 logInfo("Conectando con base de datos")
 logDebug("Database URL: " + databaseURL)
