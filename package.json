@@ -4,8 +4,9 @@
   "description": "SeedyFiuba sponsors microservice",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --inspect=0.0.0.0:8000 src/index.js",
-    "start": "node src/index.js",
+    "db": "sequelize-cli db:migrate && sequelize-cli db:seed:undo:all && sequelize-cli db:seed:all",
+    "dev": "npm run db && nodemon --inspect=0.0.0.0:8000 src/index.js",
+    "start": "npm run db && sequelize-cli db:seed:all && node src/index.js",
     "test": "jest --collectCoverage"
   },
   "repository": {
@@ -27,6 +28,7 @@
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0",
     "swagger-jsdoc": "^6.0.0",
     "swagger-ui-express": "^4.1.6"
   },
