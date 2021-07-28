@@ -1,3 +1,4 @@
+
 # PROD CONFIG
 FROM node:14.16.1
 
@@ -8,5 +9,8 @@ COPY package*.json ./
 RUN npm install
 
 COPY ./src ./src
+COPY /.sequelizerc ./
+COPY /seeders ./seeders
+COPY /migrations ./migrations
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
