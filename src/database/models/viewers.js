@@ -18,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  //Viewer.beforeCreate((viewer, options) => {
-  //  viewer.promotedate = new Date().toISOString();
-  //})
-
   Viewer.associate = function (models) {
     models.Viewer.hasMany(models.ViewerOf, {foreignKey: 'userid'})
   }
